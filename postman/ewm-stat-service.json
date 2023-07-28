@@ -1,4 +1,10 @@
 {
+  "info": {
+    "_postman_id": "2727ee6b-c606-49ec-9d4b-549c21dbe7ae",
+    "name": "Tests for detatched stats service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23073145"
+  },
   "item": [
     {
       "name": "Получение статистики по посещениям. (Тест на опциональность параметра uris)",

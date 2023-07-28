@@ -10,32 +10,32 @@ import java.util.List;
 
 public interface StatsRepository extends JpaRepository<Stat, Long> {
 
-    @Query("SELECT new ViewStatsDto(s.app, s.uri, COUNT(s.ip)) " +
+    @Query("SELECT new ru.practicum.ViewStatsDto(s.app, s.uri, COUNT(s.ip)) " +
             "FROM Stat AS s " +
             "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
     List<ViewStatsDto> findAllStats(LocalDateTime startTime, LocalDateTime endTime);
 
-    @Query("SELECT new ViewStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
+    @Query("SELECT new ru.practicum.ViewStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
             "FROM Stat AS s " +
             "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
     List<ViewStatsDto> findAllStatsUniqueIp(LocalDateTime startTime, LocalDateTime endTime);
 
-    @Query("SELECT new ViewStatsDto(s.app, s.uri, COUNT(s.ip)) " +
-            "FROM Stats AS s " +
+    @Query("SELECT new ru.practicum.ViewStatsDto(s.app, s.uri, COUNT(s.ip)) " +
+            "FROM Stat AS s " +
             "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
-            "AND s.uri IN ?3 " +
+            "AND s.uri IN (?3) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
     List<ViewStatsDto> findAllStatsByUri(LocalDateTime startTime, LocalDateTime endTime, List<String> uri);
 
-    @Query("SELECT new ViewStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
+    @Query("SELECT new ru.practicum.ViewStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
             "FROM Stat AS s " +
             "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
-            "AND s.uri IN ?3 " +
+            "AND s.uri IN (?3) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
     List<ViewStatsDto> findStatsByUriUniqueIp(LocalDateTime startTime, LocalDateTime endTime, List<String> uri);

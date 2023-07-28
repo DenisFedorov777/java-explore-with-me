@@ -3,8 +3,8 @@ package ru.practicum.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.exception.InvalidTimeException;
 import ru.practicum.service.StatsService;
 import ru.rpacticum.EndpointHitDto;
 import ru.rpacticum.ViewStatsDto;
@@ -15,6 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Validated
 public class StatController {
 
     private final StatsService service;
@@ -27,13 +28,10 @@ public class StatController {
     }
 
     @GetMapping("/stats")
-    public List<ViewStatsDto> getStat(@RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime startTime,
-                                      @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime endTime,
-                                      @RequestParam(required = false) List<String> uri,
+    public List<ViewStatsDto> getStat(@RequestParam(value = "start") @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime startTime,
+                                      @RequestParam(value = "end") @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime endTime,
+                                      @RequestParam(required = false) List<String> uris,
                                       @RequestParam(defaultValue = "false") Boolean unique) {
-        if (startTime.isAfter(endTime)) {
-            throw new InvalidTimeException("Время начала должно быть раньше времени окончания!");
-        }
-        return service.findStats(startTime, endTime, uri, unique);
+        return service.findStats(startTime, endTime, uris, unique);
     }
 }

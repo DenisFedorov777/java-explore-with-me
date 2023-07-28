@@ -2,6 +2,7 @@ package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.exception.InvalidTimeException;
 import ru.practicum.repository.StatsRepository;
 import ru.rpacticum.EndpointHitDto;
 import ru.rpacticum.ViewStatsDto;
@@ -22,6 +23,9 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStatsDto> findStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uri, Boolean unique) {
+        if (startTime.isAfter(endTime)) {
+            throw new InvalidTimeException("Время начала должно быть раньше времени окончания!");
+        }
         if (uri == null || uri.isEmpty()) {
             if (unique) {
                 return repository.findAllStatsUniqueIp(startTime, endTime);
