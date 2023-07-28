@@ -1,20 +1,20 @@
-version: '3.8'
+version: '3.1'
 services:
-  stat-server:
+  stats-server:
     build: stat-service/stat-server
     image: stat-server-image
     container_name: stats-server-container
     ports:
       - "9090:9090"
     depends_on:
-      - stat-db
+      - stats-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stat-db:5432/stat-server
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
 
-  stat-db:
-    image: postgres:13.7-alpine
+  stats-db:
+    image: postgres:14-alpine
     container_name: stat-db-container
     ports:
       - "6541:5432"
@@ -23,22 +23,22 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  main-service:
+  ewm-service:
     build: main-service
     image: main-service-image
     container_name: main-service-container
     ports:
       - "8080:8080"
     depends_on:
-      - main-db
-      - stat-server
+      - ewm-db
+      - stats-server
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/main-service
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
 
-  main-db:
-    image: postgres:13.7-alpine
+  ewm-db:
+    image: postgres:14-alpine
     container_name: main-db-container
     ports:
       - "6542:5432"
