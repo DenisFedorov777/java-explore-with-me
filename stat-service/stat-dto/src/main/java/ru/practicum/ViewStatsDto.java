@@ -1,4 +1,4 @@
-package ru.rpacticum;
+package ru.practicum;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
