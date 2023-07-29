@@ -16,7 +16,7 @@ public class StatsClient {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final WebClient client;
 
-    public StatsClient(@Value("http://localhost:9090") String url) { //TODO
+    public StatsClient(@Value("http://localhost:9090") String url) {
         this.client = WebClient.create(url);
     }
 
@@ -29,16 +29,13 @@ public class StatsClient {
                 .block();
     }
 
-    public ResponseEntity<List<ViewStatsDto>> getStats(LocalDateTime startTime,
-                                                       LocalDateTime endTime,
-                                                       List<String> uri,
-                                                       Boolean unique) {
+    public ResponseEntity<List<ViewStatsDto>> getStats(StatsRequestDto requestDto) {
         return client.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
-                        .queryParam("startTime", startTime.format(TIME_FORMATTER))
-                        .queryParam("endTime", endTime.format(TIME_FORMATTER))
-                        .queryParam("uri", uri)
-                        .queryParam("unique", unique)
+                        .queryParam("startTime", requestDto.getStart().format(TIME_FORMATTER))
+                        .queryParam("endTime", requestDto.getEnd().format(TIME_FORMATTER))
+                        .queryParam("uri", requestDto.getUris())
+                        .queryParam("unique", requestDto.getUnique())
                         .build())
                 .retrieve()
                 .toEntityList(ViewStatsDto.class)
