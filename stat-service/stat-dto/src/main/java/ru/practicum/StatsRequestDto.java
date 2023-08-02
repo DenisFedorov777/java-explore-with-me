@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
@@ -14,6 +15,6 @@ public class StatsRequestDto {
 
     final LocalDateTime start;
     final LocalDateTime end;
-    final String uris;
+    final List<String> uris;
     final Boolean unique;
 }

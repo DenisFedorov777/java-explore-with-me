@@ -1,25 +1,21 @@
-package ru.practicum.model;
+package ru.practicum.main.categories.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
+@Table(name = "categories")
 @Builder
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "stats")
-public class Stat {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String app;
-    String uri;
-    String ip;
-    LocalDateTime timestamp;
+    String name;
 }
