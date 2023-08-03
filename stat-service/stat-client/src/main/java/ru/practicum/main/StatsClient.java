@@ -1,8 +1,10 @@
 package ru.practicum.main;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.practicum.EndpointHitDto;
@@ -15,19 +17,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class StatsClient {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final WebClient client;
+    private final ClientService clientService;
 
-    public StatsClient(@Value("http://localhost:9090") String url) {
-        this.client = WebClient.create(url);
-    }
+    /*public StatsClient(@Value("http://localhost:9090") String url) {
+        this.webClient = WebClient.create(url);
+    }*/
 
     public void saveStat(HttpServletRequest request) {
         EndpointHitDto hit = toHit(request);
-        client.post()
+        clientService
+                .client()
+                .post()
                 .uri("/hit")
                 .body(Mono.just(hit), EndpointHitDto.class)
                 .retrieve()
@@ -36,7 +41,9 @@ public class StatsClient {
     }
 
     public ResponseEntity<List<ViewStatsDto>> getStats(StatsRequestDto requestDto) {
-        return client.get()
+        return clientService
+                .client()
+                .get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
                         .queryParam("startTime", requestDto.getStart().format(TIME_FORMATTER))
                         .queryParam("endTime", requestDto.getEnd().format(TIME_FORMATTER))
@@ -72,7 +79,7 @@ public class StatsClient {
                 .ip(request.getRemoteAddr())
                 .uri(request.getRequestURI())
                 .app("main-service")
-                .timestamp(LocalDateTime.now()) //TODO
+                .timestamp(LocalDateTime.parse(LocalDateTime.now().format(TIME_FORMATTER)))
                 .build();
     }
 }
