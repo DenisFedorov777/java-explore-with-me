@@ -1,4 +1,4 @@
-package ru.practicum.handler;
+package ru.practicum.main.handler;
 
 import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;

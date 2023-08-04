@@ -1,12 +1,10 @@
 package ru.practicum;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
@@ -22,6 +20,5 @@ public class EndpointHitDto {
     @NotBlank
     String ip;
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime timestamp;
+    String timestamp;
 }

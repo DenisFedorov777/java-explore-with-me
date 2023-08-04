@@ -1,4 +1,4 @@
-package ru.practicum.handler;
+package ru.practicum.main.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Generated;

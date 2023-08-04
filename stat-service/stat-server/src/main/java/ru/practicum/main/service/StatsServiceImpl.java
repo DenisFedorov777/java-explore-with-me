@@ -1,11 +1,11 @@
-package ru.practicum.service;
+package ru.practicum.main.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.exception.InvalidTimeException;
-import ru.practicum.repository.StatsRepository;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.main.exception.InvalidTimeException;
+import ru.practicum.main.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

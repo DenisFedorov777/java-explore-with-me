@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({ClientService.class, StatsClient.class})
+@Import({StatsClient.class})
 public class MainServiceApp {
 
     public static void main(String[] args) {

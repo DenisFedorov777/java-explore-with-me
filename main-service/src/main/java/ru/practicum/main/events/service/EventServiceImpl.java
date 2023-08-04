@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.main.StatsClient;
+import ru.practicum.main.StatsService;
 import ru.practicum.main.categories.model.Category;
 import ru.practicum.main.categories.repository.CategoryRepository;
 import ru.practicum.main.events.model.Event;
@@ -47,7 +47,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
-    private final StatsClient hitService;
+    private final StatsService hitService;
     private final UpdaterDtoToEntity update;
 
     @Override
@@ -113,6 +113,8 @@ public class EventServiceImpl implements EventService {
         Category eventCategory = categoryRepository.getReferenceById(newEventDto.getCategory());
         Event event = EventMapper.toEvent(newEventDto);
         setInitialParameters(initiator, eventCategory, event);
+        Event ev = repository.save(event);
+        log.info("Эвент");
         return EventMapper.toFullDto(repository.save(event));
     }
 
@@ -180,6 +182,9 @@ public class EventServiceImpl implements EventService {
                                                        LocalDateTime rangeEnd, boolean onlyAvailable,
                                                        EventSortType sort, Integer from, Integer size,
                                                        HttpServletRequest request) {
+        if ((rangeStart != null) && (rangeEnd != null) && (rangeStart.isAfter(rangeEnd))) {
+            throw new BadRequestException("Время начала должно быть раньше времени окончания!");
+        }
         Page<Event> resultEvents;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         Pageable paginationWithSort = patternPageableWithSort(from, size, sort);
@@ -207,7 +212,7 @@ public class EventServiceImpl implements EventService {
             resultEvents = repository.findAll(paginationWithSort);
         }
         updateViews(resultEvents.getContent());
-        hitService.saveStat(request);
+        hitService.saveHit(request);
         return resultEvents.stream()
                 .map(EventMapper::toShortDto)
                 .collect(Collectors.toList());
@@ -218,7 +223,7 @@ public class EventServiceImpl implements EventService {
         Event event = repository.findByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new EventNotFoundException("Event with id was not found"));
         updateViews(List.of(event));
-        hitService.saveStat(request);
+        hitService.saveHit(request);
         return EventMapper.toFullDto(event);
     }
 
@@ -349,8 +354,8 @@ public class EventServiceImpl implements EventService {
 
     private static void validateRequestsNotEmpty(List<Request> requests) {
         if (requests.isEmpty()) {
-            log.error("It is not possible to cancel an already confirmed application");
-            throw new InvalidDataException("It is not possible to cancel an already confirmed application");
+            log.warn("Невозможно отменить уже подтвержденную заявку!");
+            throw new InvalidDataException("Невозможно отменить уже подтвержденную заявку!");
         }
     }
 }
