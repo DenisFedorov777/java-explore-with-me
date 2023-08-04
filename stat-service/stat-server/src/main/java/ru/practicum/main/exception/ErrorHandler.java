@@ -1,4 +1,4 @@
-package ru.practicum.main.handler;
+package ru.practicum.main.exception;
 
 import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.main.exception.InvalidTimeException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

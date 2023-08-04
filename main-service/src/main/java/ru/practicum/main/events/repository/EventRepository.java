@@ -23,5 +23,5 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     @Query("select min(e.publishedOn) " +
             "from Event as e")
-    Optional<LocalDateTime> getMinDateInEvents(); //TODO
+    Optional<LocalDateTime> getMinDateInEvents();
 }
