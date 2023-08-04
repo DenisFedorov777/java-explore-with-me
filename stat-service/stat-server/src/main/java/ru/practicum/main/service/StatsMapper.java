@@ -6,6 +6,7 @@ import ru.practicum.EndpointHitDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+//маппер
 public class StatsMapper {
 
     public static Stat toStat(EndpointHitDto endpoint) {
