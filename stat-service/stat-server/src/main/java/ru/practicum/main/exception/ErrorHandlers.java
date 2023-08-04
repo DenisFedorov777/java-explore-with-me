@@ -15,7 +15,7 @@ import java.util.Arrays;
 @RestControllerAdvice
 @Generated
 @Slf4j
-public class ErrorHandler {
+public class ErrorHandlers {
     private static final String ERROR_REASON_BAD_REQUEST = "Incorrectly made request.";
 
     @ExceptionHandler(InvalidTimeException.class)

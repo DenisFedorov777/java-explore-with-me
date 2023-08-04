@@ -1,80 +1,45 @@
 package ru.practicum.main;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-import ru.practicum.EndpointHitDto;
-import ru.practicum.ViewStatsDto;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.tcp.TcpClient;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
-@RequiredArgsConstructor
 public class StatsClient {
+    private static final int TIMEOUT = 1000;
+    @Value("http://stats-server:9090")
+    public String baseUrl;
 
-    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final ClientService webClient;
+    public WebClient webClientWithTimeout() {
+        final var tcpClient = TcpClient
+                .create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)
+                .doOnConnected(connection -> {
+                    connection.addHandlerLast(new ReadTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new WriteTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
+                });
 
-    public void saveStat(HttpServletRequest request) {
-        EndpointHitDto hit = toHit(request);
-        webClient
-                .webClientWithTimeout()
-                .post()
-                .uri("/hit")
-                .body(Mono.just(hit), EndpointHitDto.class)
-                .retrieve()
-                .bodyToMono(EndpointHitDto.class)
-                .block();
-    }
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(baseUrl);
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.URI_COMPONENT);
 
-    public ResponseEntity<List<ViewStatsDto>>
-    getStats(LocalDateTime start,
-             LocalDateTime end,
-             List<String> uris,
-             Boolean unique) {
-        return webClient
-                .webClientWithTimeout()
-                .get()
-                .uri(builder -> builder.path("/stats")
-                        .queryParam("start", (start).format(formatter))
-                        .queryParam("end", (end).format(formatter))
-                        .queryParam("uris", uris)
-                        .queryParam("unique", unique)
-                        .build())
-                .retrieve()
-                .toEntityList(ViewStatsDto.class)
-                .block();
-    }
 
-    public Long getViews(LocalDateTime start, LocalDateTime end, List<Long> eventsIds) {
-        Long currentViews = 0L;
-        if (eventsIds.isEmpty()) {
-            return currentViews;
-        }
-        List<String> uris = new ArrayList<>();
-        for (Long eventId : eventsIds) {
-            uris.add("/events/" + eventId);
-        }
-        List<ViewStatsDto> stats = getStats(start, end, uris, true).getBody();
-        if (stats != null && !stats.isEmpty()) {
-            for (ViewStatsDto stat : stats) {
-                currentViews += stat.getHits();
-            }
-        }
-        return currentViews;
-    }
-
-    private EndpointHitDto toHit(HttpServletRequest request) {
-        return EndpointHitDto.builder()
-                .ip(request.getRemoteAddr())
-                .uri(request.getRequestURI())
-                .app("main-service")
-                .timestamp(LocalDateTime.now().format(formatter))
+        return WebClient.builder()
+                .uriBuilderFactory(factory)
+                .baseUrl(baseUrl)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
                 .build();
     }
 }
