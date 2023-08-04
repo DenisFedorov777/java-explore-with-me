@@ -6,11 +6,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.events.model.dto.EventFullDto;
-import ru.practicum.main.events.service.EventService;
 import ru.practicum.main.events.model.dto.EventShortDto;
-import ru.practicum.main.exceptions.BadRequestException;
-import ru.practicum.main.state.TimeConstant;
+import ru.practicum.main.events.service.EventService;
 import ru.practicum.main.state.EventSortType;
+import ru.practicum.main.state.TimeConstant;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
@@ -38,16 +37,14 @@ public class EventsControllerPublic {
                             @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                             @RequestParam(defaultValue = "10") @Positive Integer size,
                             HttpServletRequest request) {
-        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
-            throw new BadRequestException("Start time must be before end time!");
-        }
+        log.info("Тест который достал валиться, покажись!!!");
         return eventService.getEventsWithSortByText(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, request);
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
-        log.info("get event by ID {}", id);
+        log.info("получить событие по идентификатору: {}", id);
         return eventService.getEventById(id, request);
     }
 }
