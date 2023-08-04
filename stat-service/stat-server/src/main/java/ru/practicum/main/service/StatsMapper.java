@@ -1,7 +1,10 @@
-package ru.practicum.service;
+package ru.practicum.main.service;
 
-import ru.practicum.model.Stat;
 import ru.practicum.EndpointHitDto;
+import ru.practicum.main.model.Stat;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class StatsMapper {
 
@@ -10,7 +13,7 @@ public class StatsMapper {
                 .app(endpoint.getApp())
                 .uri(endpoint.getUri())
                 .ip(endpoint.getIp())
-                .timestamp(endpoint.getTimestamp())
+                .timestamp(LocalDateTime.parse(endpoint.getTimestamp(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }

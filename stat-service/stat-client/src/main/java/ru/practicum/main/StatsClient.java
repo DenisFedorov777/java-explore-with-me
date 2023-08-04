@@ -1,14 +1,10 @@
 package ru.practicum.main;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.practicum.EndpointHitDto;
-import ru.practicum.StatsRequestDto;
 import ru.practicum.ViewStatsDto;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,21 +13,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class StatsClient {
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final ClientService clientService;
-
-    /*public StatsClient(@Value("http://localhost:9090") String url) {
-        this.webClient = WebClient.create(url);
-    }*/
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final ClientService webClient;
 
     public void saveStat(HttpServletRequest request) {
         EndpointHitDto hit = toHit(request);
-        clientService
-                .client()
+        webClient
+                .webClientWithTimeout()
                 .post()
                 .uri("/hit")
                 .body(Mono.just(hit), EndpointHitDto.class)
@@ -40,15 +32,19 @@ public class StatsClient {
                 .block();
     }
 
-    public ResponseEntity<List<ViewStatsDto>> getStats(StatsRequestDto requestDto) {
-        return clientService
-                .client()
+    public ResponseEntity<List<ViewStatsDto>>
+    getStats(LocalDateTime start,
+             LocalDateTime end,
+             List<String> uris,
+             Boolean unique) {
+        return webClient
+                .webClientWithTimeout()
                 .get()
-                .uri(uriBuilder -> uriBuilder.path("/stats")
-                        .queryParam("startTime", requestDto.getStart().format(TIME_FORMATTER))
-                        .queryParam("endTime", requestDto.getEnd().format(TIME_FORMATTER))
-                        .queryParam("uri", requestDto.getUris())
-                        .queryParam("unique", requestDto.getUnique())
+                .uri(builder -> builder.path("/stats")
+                        .queryParam("start", (start).format(formatter))
+                        .queryParam("end", (end).format(formatter))
+                        .queryParam("uris", uris)
+                        .queryParam("unique", unique)
                         .build())
                 .retrieve()
                 .toEntityList(ViewStatsDto.class)
@@ -64,8 +60,7 @@ public class StatsClient {
         for (Long eventId : eventsIds) {
             uris.add("/events/" + eventId);
         }
-        StatsRequestDto requestDto = new StatsRequestDto(start, end, uris, true);
-        List<ViewStatsDto> stats = getStats(requestDto).getBody();
+        List<ViewStatsDto> stats = getStats(start, end, uris, true).getBody();
         if (stats != null && !stats.isEmpty()) {
             for (ViewStatsDto stat : stats) {
                 currentViews += stat.getHits();
@@ -74,12 +69,12 @@ public class StatsClient {
         return currentViews;
     }
 
-    public EndpointHitDto toHit(HttpServletRequest request) {
+    private EndpointHitDto toHit(HttpServletRequest request) {
         return EndpointHitDto.builder()
                 .ip(request.getRemoteAddr())
                 .uri(request.getRequestURI())
                 .app("main-service")
-                .timestamp(LocalDateTime.parse(LocalDateTime.now().format(TIME_FORMATTER)))
+                .timestamp(LocalDateTime.now().format(formatter))
                 .build();
     }
 }

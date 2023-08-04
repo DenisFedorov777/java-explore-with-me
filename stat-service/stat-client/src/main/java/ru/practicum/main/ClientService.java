@@ -18,10 +18,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ClientService {
     private static final int TIMEOUT = 1000;
-    @Value("http://localhost:9090")
+    @Value("http://stats-server:9090")
     public String baseUrl;
 
-    public WebClient client() {
+    public WebClient webClientWithTimeout() {
         final var tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)

@@ -1,11 +1,11 @@
-package ru.practicum.controller;
+package ru.practicum.main.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.service.StatsService;
+import ru.practicum.main.service.StatsService;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 

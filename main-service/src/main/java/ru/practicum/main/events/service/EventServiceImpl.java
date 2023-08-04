@@ -47,7 +47,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
-    private final StatsClient hitService;
+    private final StatsClient statsClient;
     private final UpdaterDtoToEntity update;
 
     @Override
@@ -207,7 +207,7 @@ public class EventServiceImpl implements EventService {
             resultEvents = repository.findAll(paginationWithSort);
         }
         updateViews(resultEvents.getContent());
-        hitService.saveStat(request);
+        statsClient.saveStat(request);
         return resultEvents.stream()
                 .map(EventMapper::toShortDto)
                 .collect(Collectors.toList());
@@ -218,7 +218,7 @@ public class EventServiceImpl implements EventService {
         Event event = repository.findByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new EventNotFoundException("Event with id was not found"));
         updateViews(List.of(event));
-        hitService.saveStat(request);
+        statsClient.saveStat(request);
         return EventMapper.toFullDto(event);
     }
 
@@ -291,7 +291,7 @@ public class EventServiceImpl implements EventService {
         if (startDate.isPresent()) {
             LocalDateTime start = startDate.get();
             LocalDateTime end = LocalDateTime.now();
-            Long totalViews = hitService.getViews(start, end, eventsIds);
+            Long totalViews = statsClient.getViews(start, end, eventsIds);
             resultEvents.forEach(v -> v.setViews(totalViews));
         } else {
             resultEvents.forEach(v -> v.setViews(0L));
