@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.main.StatsService;
 import ru.practicum.main.events.model.dto.EventFullDto;
 import ru.practicum.main.events.model.dto.EventShortDto;
 import ru.practicum.main.events.service.EventService;
@@ -24,6 +25,7 @@ import java.util.List;
 @Validated
 public class EventsControllerPublic {
     private final EventService eventService;
+    private final StatsService hitService;
 
     @GetMapping
     public List<EventShortDto>
@@ -38,6 +40,7 @@ public class EventsControllerPublic {
                             @RequestParam(defaultValue = "10") @Positive Integer size,
                             HttpServletRequest request) {
         log.info("Получение отсортированных событий!!!");
+        hitService.saveHit(request);
         return eventService.getEventsWithSortByText(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, request);
     }

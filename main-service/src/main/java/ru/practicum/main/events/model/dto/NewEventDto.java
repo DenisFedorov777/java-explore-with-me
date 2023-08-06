@@ -3,7 +3,6 @@ package ru.practicum.main.events.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.main.state.TimeConstant;
 import ru.practicum.main.state.Location;
 
 import javax.validation.constraints.NotBlank;
@@ -11,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+
+import static ru.practicum.main.state.TimeConstant.DATE_FORMAT;
 
 @Data
 @Builder
@@ -26,7 +27,7 @@ public class NewEventDto {
     @NotBlank
     @Size(min = 20, max = 7000)
     String description;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeConstant.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @NotNull
     LocalDateTime eventDate;
     @NotNull

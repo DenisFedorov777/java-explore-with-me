@@ -114,7 +114,6 @@ public class EventServiceImpl implements EventService {
         Event event = EventMapper.toEvent(newEventDto);
         setInitialParameters(initiator, eventCategory, event);
         Event ev = repository.save(event);
-        log.info("Эвент");
         return EventMapper.toFullDto(repository.save(event));
     }
 
@@ -212,7 +211,6 @@ public class EventServiceImpl implements EventService {
             resultEvents = repository.findAll(paginationWithSort);
         }
         updateViews(resultEvents.getContent());
-        hitService.saveHit(request);
         log.info("Проверка!");
         return resultEvents.stream()
                 .map(EventMapper::toShortDto)
