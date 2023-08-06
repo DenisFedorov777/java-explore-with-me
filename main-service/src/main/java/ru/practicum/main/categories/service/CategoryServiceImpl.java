@@ -2,6 +2,7 @@ package ru.practicum.main.categories.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,8 @@ import ru.practicum.main.categories.model.Category;
 import ru.practicum.main.categories.model.dto.CategoryDto;
 import ru.practicum.main.categories.model.dto.NewCategoryDto;
 import ru.practicum.main.categories.repository.CategoryRepository;
+import ru.practicum.main.events.model.Event;
+import ru.practicum.main.events.repository.EventRepository;
 import ru.practicum.main.exceptions.CategoryNotFoundException;
 
 import java.util.List;
@@ -24,6 +27,7 @@ import static ru.practicum.main.state.Pagination.patternPageable;
 @Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
+    private final EventRepository eventRepository;
 
     @Transactional
     @Override
@@ -58,8 +62,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategory(Long catId) {
+        List<Event> eventList = eventRepository.findByCategoryId(catId);
+        if (!eventList.isEmpty()) {
+            throw new DataIntegrityViolationException("В категории есть события, удалить не удастся!");
+        }
         log.info("Удаление категории с идентификатором: {}", catId);
-        repository.delete(repository.findById(catId)
-                .orElseThrow(() -> new CategoryNotFoundException("Категория не найдена и не удалена")));
+        repository.deleteById(catId);
     }
 }
