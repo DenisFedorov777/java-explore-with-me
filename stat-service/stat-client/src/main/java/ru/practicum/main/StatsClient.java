@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class StatsClient {
     private static final int TIMEOUT = 1000;
-    @Value("http://stats-server:9090")
+   @Value("http://stats-server:9090")
+    //@Value("http://localhost:9090")
     public String baseUrl;
 
     public WebClient webClientWithTimeout() {
