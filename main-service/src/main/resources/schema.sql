@@ -38,7 +38,6 @@ create table if not exists events (
     published_on timestamp without time zone,
     request_moderation boolean not null,
     state varchar(255) not null,
-    views bigint,
     constraint pk_events primary key (id)
 );
 

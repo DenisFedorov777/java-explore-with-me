@@ -39,7 +39,7 @@ public class EventMapper {
                 .initiator(UserMapper.toShortDto(event.getInitiator()))
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(event.getViews())
+                //.views(event.getViews())
                 .build();
     }
 

@@ -213,6 +213,7 @@ public class EventServiceImpl implements EventService {
         }
         updateViews(resultEvents.getContent());
         hitService.saveHit(request);
+        log.info("Проверка!");
         return resultEvents.stream()
                 .map(EventMapper::toShortDto)
                 .collect(Collectors.toList());

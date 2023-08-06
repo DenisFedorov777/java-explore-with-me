@@ -53,5 +53,6 @@ public class Event {
     Boolean requestModeration;
     @Enumerated(EnumType.STRING)
     State state;
+    @Transient
     Long views;
 }
