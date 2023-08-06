@@ -4,26 +4,21 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.main.categories.model.Category;
 import ru.practicum.main.categories.model.dto.CategoryDto;
+import ru.practicum.main.categories.model.dto.NewCategoryDto;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CategoryMapper {
-
-    /*@Bean
-        public ModelMapper mapperMapper() {
-        ModelMapper mapper = new ModelMapper();
-        return mapper;
-    }*/
-    public static Category toCategory(CategoryDto categoryDto) {
-        return Category.builder()
-                .id(categoryDto.getId())
-                .name(categoryDto.getName())
-                .build();
-    }
 
     public static CategoryDto toDtoCategory(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .build();
+    }
+
+    public static Category toCategoryFromNewDto(NewCategoryDto dto) {
+        return Category.builder()
+                .name(dto.getName())
                 .build();
     }
 }

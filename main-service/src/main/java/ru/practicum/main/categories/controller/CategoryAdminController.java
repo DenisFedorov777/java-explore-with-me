@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.categories.model.dto.CategoryDto;
+import ru.practicum.main.categories.model.dto.NewCategoryDto;
 import ru.practicum.main.categories.service.CategoryService;
 
 import javax.validation.Valid;
@@ -18,7 +19,7 @@ public class CategoryAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto) {
+    public CategoryDto createCategory(@Valid @RequestBody NewCategoryDto categoryDto) {
         log.info("Creating category with body {}", categoryDto);
         return categoryService.createCategory(categoryDto);
     }

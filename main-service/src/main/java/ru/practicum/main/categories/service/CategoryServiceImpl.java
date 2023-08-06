@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.categories.model.Category;
 import ru.practicum.main.categories.model.dto.CategoryDto;
+import ru.practicum.main.categories.model.dto.NewCategoryDto;
 import ru.practicum.main.categories.repository.CategoryRepository;
 import ru.practicum.main.exceptions.CategoryNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.main.categories.service.CategoryMapper.toCategoryFromNewDto;
+import static ru.practicum.main.categories.service.CategoryMapper.toDtoCategory;
 import static ru.practicum.main.state.Pagination.patternPageable;
 
 @Service
@@ -24,9 +27,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) {
+    public CategoryDto createCategory(NewCategoryDto categoryDto) {
         log.info("Создание новой категории: {}", categoryDto.getName());
-        return CategoryMapper.toDtoCategory(repository.save(CategoryMapper.toCategory(categoryDto)));
+        return toDtoCategory(repository.save(toCategoryFromNewDto(categoryDto)));
     }
 
     @Transactional
@@ -35,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = repository.findById(catId)
                 .orElseThrow(() -> new CategoryNotFoundException("Категория не найдена"));
         category.setName(categoryDto.getName());
-        return CategoryMapper.toDtoCategory(repository.save(category));
+        return toDtoCategory(repository.save(category));
     }
 
     @Override
@@ -48,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategoryById(Long catId) {
-        return CategoryMapper.toDtoCategory(repository.findById(catId)
+        return toDtoCategory(repository.findById(catId)
                 .orElseThrow(() -> new CategoryNotFoundException("Категория не найдена")));
     }
 
