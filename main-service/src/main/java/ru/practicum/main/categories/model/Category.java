@@ -7,12 +7,12 @@ import javax.persistence.*;
 
 @Table(name = "categories")
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
 
     @Id

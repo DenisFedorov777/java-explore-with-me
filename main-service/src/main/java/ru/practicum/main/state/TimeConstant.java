@@ -1,10 +1,11 @@
 package ru.practicum.main.state;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 
-@UtilityClass
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimeConstant {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";

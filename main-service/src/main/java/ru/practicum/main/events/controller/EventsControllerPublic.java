@@ -37,14 +37,14 @@ public class EventsControllerPublic {
                             @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                             @RequestParam(defaultValue = "10") @Positive Integer size,
                             HttpServletRequest request) {
-        log.info("Тест который достал валиться, покажись!!!");
+        log.info("Получение отсортированных событий!!!");
         return eventService.getEventsWithSortByText(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, request);
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
-        log.info("получить событие по идентификатору: {}", id);
+        log.info("Получить событие по идентификатору: {}", id);
         return eventService.getEventById(id, request);
     }
 }

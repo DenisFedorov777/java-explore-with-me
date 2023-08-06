@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Request {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

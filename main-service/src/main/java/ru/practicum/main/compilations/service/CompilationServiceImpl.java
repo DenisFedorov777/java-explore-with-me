@@ -55,11 +55,10 @@ public class CompilationServiceImpl implements CompilationService {
             return repository.findAllByPinnedTrue(pagination).stream()
                     .map(CompilationMapper::toDto)
                     .collect(Collectors.toList());
-        } else {
-            return repository.findAllByPinnedFalse(pagination).stream()
-                    .map(CompilationMapper::toDto)
-                    .collect(Collectors.toList());
         }
+        return repository.findAllByPinnedFalse(pagination).stream()
+                .map(CompilationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

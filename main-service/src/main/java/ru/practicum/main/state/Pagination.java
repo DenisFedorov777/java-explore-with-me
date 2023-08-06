@@ -6,7 +6,6 @@ import org.springframework.data.domain.Sort;
 
 public class Pagination extends PageRequest {
 
-
     public static final Sort SORT_EVENT_DATE = Sort.by("eventDate").ascending();
     public static final Sort SORT_VIEWS = Sort.by("views").ascending();
 

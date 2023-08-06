@@ -31,7 +31,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(readOnly = true)
     public List<ParticipationRequestDto> getParticipationInEventsByUserId(Long userId) {
-        validateExistsUser(userId);
+        findUserOrException(userId);
         return repository.findAllByRequester_Id(userId).stream()
                 .map(RequestMapper::toDtoRequest)
                 .collect(Collectors.toList());
@@ -40,8 +40,8 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public ParticipationRequestDto createRequestByUserOnParticipation(Long userId, Long eventId) {
         Request request = new Request();
-        User userRequester = validateExistsUser(userId);
-        Event event = validateExistsEvent(eventId);
+        User userRequester = findUserOrException(userId);
+        Event event = findEventOrException(eventId);
         List<Request> confirmedRequests = repository.findConfirmedRequest(RequestStatus.CONFIRMED, eventId);
         validateCreateByUserRequest(userId, eventId, userRequester, event, confirmedRequests);
         updateRequestData(request, userRequester, event);
@@ -50,8 +50,8 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ParticipationRequestDto cancelRequestByUser(Long userId, Long requestId) {
-        User userRequester = validateExistsUser(userId);
-        Request request = validateExistsRequest(requestId);
+        User userRequester = findUserOrException(userId);
+        Request request = findRequestOrException(requestId);
         validateUserOwnerRequest(userRequester, request.getRequester());
         request.setStatus(RequestStatus.CANCELED);
         return RequestMapper.toDtoRequest(repository.save(request));
@@ -64,17 +64,17 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
-    private User validateExistsUser(Long userId) {
+    private User findUserOrException(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id not found: " + userId));
     }
 
-    private Event validateExistsEvent(Long eventId) {
+    private Event findEventOrException(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event with id was not found: " + eventId));
     }
 
-    private Request validateExistsRequest(Long requestId) {
+    private Request findRequestOrException(Long requestId) {
         return repository.findById(requestId)
                 .orElseThrow(() -> new RequestNotFoundException("Request with id not found: " + requestId));
     }
