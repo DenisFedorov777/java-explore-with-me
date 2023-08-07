@@ -10,13 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    List<EventFullDto> getEvents(List<Long> users,
-                                 List<State> states,
-                                 List<Long> categories,
-                                 LocalDateTime rangeStart,
-                                 LocalDateTime rangeEnd,
-                                 Integer from,
-                                 Integer size);
+    List<EventFullDto> getEvents(EventRequestDto requestDto);
 
     EventFullDto patchEventByAdmin(Long eventId, UpdateEventRequest request);
 

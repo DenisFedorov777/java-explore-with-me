@@ -51,25 +51,21 @@ public class EventServiceImpl implements EventService {
     private final UpdaterDtoToEntity update;
 
     @Override
-    public List<EventFullDto> getEvents(List<Long> users,
-                                        List<State> states,
-                                        List<Long> categories,
-                                        LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                        Integer from, Integer size) {
+    public List<EventFullDto> getEvents(EventRequestDto requestDto) {
         Page<Event> result;
         BooleanBuilder bb = new BooleanBuilder();
-        Pageable pagination = patternPageable(from, size);
-        if (users != null) {
-            bb.and(event.initiator.id.in(users));
+        Pageable pagination = patternPageable(requestDto.getFrom(), requestDto.getSize());
+        if (requestDto.getUsers() != null) {
+            bb.and(event.initiator.id.in(requestDto.getUsers()));
         }
-        if (states != null) {
-            bb.and(event.state.in(states));
+        if (requestDto.getStates() != null) {
+            bb.and(event.state.in(requestDto.getStates()));
         }
-        if (categories != null) {
-            bb.and(event.category.id.in(categories));
+        if (requestDto.getCategories() != null) {
+            bb.and(event.category.id.in(requestDto.getCategories()));
         }
-        if (rangeStart != null && rangeEnd != null) {
-            bb.and(event.eventDate.between(rangeStart, rangeEnd));
+        if (requestDto.getRangeStart() != null && requestDto.getRangeEnd() != null) {
+            bb.and(event.eventDate.between(requestDto.getRangeStart(), requestDto.getRangeEnd()));
         }
         if (bb.getValue() != null) {
             result = repository.findAll(bb.getValue(), pagination);

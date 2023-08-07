@@ -32,8 +32,7 @@ public class StatsService {
                 .block();
     }
 
-    public ResponseEntity<List<ViewStatsDto>>
-    getStats(LocalDateTime start,
+    public ResponseEntity<List<ViewStatsDto>> getStats(LocalDateTime start,
              LocalDateTime end,
              List<String> uris,
              Boolean unique) {
