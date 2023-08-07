@@ -28,7 +28,6 @@ import ru.practicum.main.state.UpdaterDtoToEntity;
 import ru.practicum.main.users.model.User;
 import ru.practicum.main.users.repository.UserRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
