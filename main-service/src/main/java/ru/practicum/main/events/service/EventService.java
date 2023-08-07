@@ -3,7 +3,6 @@ package ru.practicum.main.events.service;
 import ru.practicum.main.events.model.dto.*;
 import ru.practicum.main.requests.ParticipationRequestDto;
 import ru.practicum.main.state.EventSortType;
-import ru.practicum.main.state.State;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;

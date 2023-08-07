@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.main.StatsService;
+import ru.practicum.main.StatsClient;
 import ru.practicum.main.categories.model.Category;
 import ru.practicum.main.categories.repository.CategoryRepository;
 import ru.practicum.main.events.model.Event;
@@ -47,7 +47,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
-    private final StatsService hitService;
+    private final StatsClient statsClient;
     private final UpdaterDtoToEntity update;
 
     @Override
@@ -218,7 +218,7 @@ public class EventServiceImpl implements EventService {
         Event event = repository.findByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new EventNotFoundException("Event with id was not found"));
         updateViews(List.of(event));
-        hitService.saveHit(request);
+        statsClient.saveHit(request);
         return EventMapper.toFullDto(event);
     }
 
@@ -291,7 +291,7 @@ public class EventServiceImpl implements EventService {
         if (startDate.isPresent()) {
             LocalDateTime start = startDate.get();
             LocalDateTime end = LocalDateTime.now();
-            Long totalViews = hitService.getViews(start, end, eventsIds);
+            Long totalViews = statsClient.getViews(start, end, eventsIds);
             resultEvents.forEach(v -> v.setViews(totalViews));
         } else {
             resultEvents.forEach(v -> v.setViews(0L));
