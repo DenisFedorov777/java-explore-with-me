@@ -28,26 +28,27 @@ public class EventsControllerPublic {
     private final StatsClient statsClient;
 
     @GetMapping
-    public List<EventShortDto>
-    getEventsWithSortByText(@RequestParam(required = false) String text,
-                            @RequestParam(required = false) List<Long> categories,
-                            @RequestParam(required = false) Boolean paid,
-                            @RequestParam(required = false) @DateTimeFormat(pattern = TimeConstant.DATE_FORMAT) LocalDateTime rangeStart,
-                            @RequestParam(required = false) @DateTimeFormat(pattern = TimeConstant.DATE_FORMAT) LocalDateTime rangeEnd,
-                            @RequestParam(defaultValue = "false") boolean onlyAvailable,
-                            @RequestParam(required = false) EventSortType sort,
-                            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                            @RequestParam(defaultValue = "10") @Positive Integer size,
-                            HttpServletRequest request) {
+    public List<EventShortDto> getEventsWithSortByText(
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) List<Long> categories,
+            @RequestParam(required = false) Boolean paid,
+            @RequestParam(required = false) @DateTimeFormat(pattern = TimeConstant.DATE_FORMAT) LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = TimeConstant.DATE_FORMAT) LocalDateTime rangeEnd,
+            @RequestParam(defaultValue = "false") boolean onlyAvailable,
+            @RequestParam(required = false) EventSortType sort,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size,
+            HttpServletRequest request) {
         log.info("Получение отсортированных событий!!!");
         statsClient.saveHit(request);
         return eventService.getEventsWithSortByText(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
-                from, size, request);
+                from, size);
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
         log.info("Получить событие по идентификатору: {}", id);
-        return eventService.getEventById(id, request);
+        statsClient.saveHit(request);
+        return eventService.getEventById(id);
     }
 }

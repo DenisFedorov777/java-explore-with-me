@@ -34,8 +34,7 @@ public interface EventService {
                                                 boolean onlyAvailable,
                                                 EventSortType sort,
                                                 Integer from,
-                                                Integer size,
-                                                HttpServletRequest request);
+                                                Integer size);
 
-    EventFullDto getEventById(Long id, HttpServletRequest request);
+    EventFullDto getEventById(Long id);
 }

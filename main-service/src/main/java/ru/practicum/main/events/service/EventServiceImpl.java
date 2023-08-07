@@ -175,8 +175,7 @@ public class EventServiceImpl implements EventService {
                                                        List<Long> categories,
                                                        Boolean paid, LocalDateTime rangeStart,
                                                        LocalDateTime rangeEnd, boolean onlyAvailable,
-                                                       EventSortType sort, Integer from, Integer size,
-                                                       HttpServletRequest request) {
+                                                       EventSortType sort, Integer from, Integer size) {
         if ((rangeStart != null) && (rangeEnd != null) && (rangeStart.isAfter(rangeEnd))) {
             throw new BadRequestException("Время начала должно быть раньше времени окончания!");
         }
@@ -214,11 +213,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEventById(Long eventId, HttpServletRequest request) {
+    public EventFullDto getEventById(Long eventId) {
         Event event = repository.findByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new EventNotFoundException("Event with id was not found"));
         updateViews(List.of(event));
-        statsClient.saveHit(request);
         return EventMapper.toFullDto(event);
     }
 
