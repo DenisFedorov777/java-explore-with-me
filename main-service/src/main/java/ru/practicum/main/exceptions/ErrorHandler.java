@@ -50,6 +50,7 @@ public class ErrorHandler {
             CategoryNotFoundException.class,
             CompilationNotFoundException.class,
             EventNotFoundException.class,
+            CommentNotFoundException.class,
             RequestNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
