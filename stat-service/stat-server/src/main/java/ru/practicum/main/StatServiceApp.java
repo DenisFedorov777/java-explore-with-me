@@ -2,13 +2,11 @@ package ru.practicum.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({StatsClient.class})
-public class MainServiceApp {
+public class StatServiceApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(MainServiceApp.class, args);
+        SpringApplication.run(StatServiceApp.class, args);
     }
 }

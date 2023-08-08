@@ -11,7 +11,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stat-server
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_PASSWORD=denis1
 
   stats-db:
     image: postgres:14-alpine
@@ -21,7 +21,7 @@ services:
     environment:
       - POSTGRES_DB=stat-server
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=denis1
 
   ewm-service:
     build: main-service
@@ -35,7 +35,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main-service
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_PASSWORD=denis1
 
   ewm-db:
     image: postgres:14-alpine
@@ -45,4 +45,4 @@ services:
     environment:
       - POSTGRES_DB=main-service
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=denis1
