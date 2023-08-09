@@ -18,6 +18,7 @@ import ru.practicum.main.exceptions.UserNotFoundException;
 import ru.practicum.main.users.model.User;
 import ru.practicum.main.users.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,8 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(Long userId, Long commentId, CommentDto dto) {
         Comment comment = getByIdAndAuthorId(commentId, userId);
         comment.setText(dto.getText());
+        comment.setUpdated(true);
+        comment.setUpdateTime(LocalDateTime.now());
         log.info("Редактирование комментария.");
         return mapToCommentDto(commentRepository.save(comment));
     }

@@ -67,5 +67,7 @@ create table if not exists comments (
   text varchar(2000),
   event_id bigint not null references events (id)  on delete cascade,
   author_id bigint not null references users (id) on delete cascade,
-  created_date timestamp WITHOUT time zone not null
+  created_date timestamp WITHOUT time zone not null,
+  updated_date timestamp WITHOUT time zone null,
+  isupdated boolean not null
 );

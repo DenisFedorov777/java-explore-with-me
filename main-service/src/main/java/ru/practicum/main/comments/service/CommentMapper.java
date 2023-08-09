@@ -25,6 +25,7 @@ public class CommentMapper {
                 comment.getAuthor().getId(),
                 comment.getEvent().getId(),
                 comment.getCreated()
+                //comment.isUpdated()
         );
     }
 }

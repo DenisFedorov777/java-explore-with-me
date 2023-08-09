@@ -33,4 +33,8 @@ public class Comment {
     User author;
     @Column(name = "created_date", nullable = false, updatable = false)
     LocalDateTime created = LocalDateTime.now();
+    @Column(name = "updated_date")
+    LocalDateTime updateTime = null; // время редактирования, default=null
+    @Column(name = "isupdated")
+    boolean isUpdated = false; //флаг показывает что комментарий был отредактирован, default=false
 }
