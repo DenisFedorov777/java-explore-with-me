@@ -17,7 +17,7 @@ public interface CommentService {
 
     List<CommentDto> getCommentsByEventId(Long userId, Long eventId, Integer from, Integer size);
 
-    List<CommentDto> getComments(Long eventId, Integer from, Integer size); //публичный эндпойнт
+    List<CommentDto> getComments(Long eventId, Integer from, Integer size);
 
     CommentDto updateCommentAdmin(Long commentId, CommentDto commentDto);
 

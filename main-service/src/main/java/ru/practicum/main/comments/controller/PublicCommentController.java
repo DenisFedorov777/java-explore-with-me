@@ -2,10 +2,8 @@ package ru.practicum.main.comments.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.comments.model.dto.CommentDto;
 import ru.practicum.main.comments.service.CommentService;
 
@@ -20,6 +18,7 @@ public class PublicCommentController {
 
     private final CommentService service;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/comments/{eventId}")
     public Collection<CommentDto> getCommentsByEvent(@PathVariable(value = "eventId") Long eventId,
                                                      @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
