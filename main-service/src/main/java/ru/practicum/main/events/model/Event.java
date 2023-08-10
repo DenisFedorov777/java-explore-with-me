@@ -54,5 +54,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     State state;
     @Transient
-    Long views, comments;
+    Long views;
+    @Transient
+    Long comments;
 }

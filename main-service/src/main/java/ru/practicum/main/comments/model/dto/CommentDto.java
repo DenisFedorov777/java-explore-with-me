@@ -31,6 +31,4 @@ public class CommentDto {
     @Null(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     LocalDateTime created;
-    /*@Null(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
-    boolean isUpdated;*/
 }
