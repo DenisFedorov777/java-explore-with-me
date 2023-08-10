@@ -1,7 +1,6 @@
 package ru.practicum.main.comments.service;
 
 import ru.practicum.main.comments.model.dto.CommentDto;
-import ru.practicum.main.comments.model.dto.CommentRequestDto;
 
 import java.util.List;
 
@@ -16,13 +15,11 @@ public interface CommentService {
 
     void deleteCommentById(Long userId, Long commentId);
 
-    List<CommentDto> getCommentsByEventId(Long userId, Long eventId);
+    List<CommentDto> getCommentsByEventId(Long userId, Long eventId, Integer from, Integer size);
+
+    List<CommentDto> getComments(Long eventId, Integer from, Integer size); //публичный эндпойнт
 
     CommentDto updateCommentAdmin(Long commentId, CommentDto commentDto);
 
-    CommentDto getCommentByIdAdmin(Long commentId);
-
     void deleteCommentByIdAdmin(Long commentId);
-
-    List<CommentDto> getCommentsAdmin(CommentRequestDto requestDto);
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.comments.model.Comment;
 import ru.practicum.main.comments.model.dto.CommentDto;
-import ru.practicum.main.comments.model.dto.CommentRequestDto;
 import ru.practicum.main.comments.repository.CommentRepository;
 import ru.practicum.main.events.model.Event;
 import ru.practicum.main.events.repository.EventRepository;
@@ -99,10 +98,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> getCommentsByEventId(Long userId, Long eventId) {
+    public List<CommentDto> getCommentsByEventId(Long userId, Long eventId, Integer from, Integer size) {
         eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " was not found"));
-        return commentRepository.findAllByEventId(eventId).stream()
+        Pageable pagination = patternPageable(from, size);
+        return commentRepository.findAllByEventId(eventId, pagination).stream()
+                .map(CommentMapper::mapToCommentDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CommentDto> getComments(Long eventId, Integer from, Integer size) {
+        eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " was not found"));
+        Pageable pagination = patternPageable(from, size);
+        return commentRepository.findAllByEventId(eventId, pagination).stream()
                 .map(CommentMapper::mapToCommentDto)
                 .collect(Collectors.toList());
     }
@@ -116,28 +126,11 @@ public class CommentServiceImpl implements CommentService {
         return mapToCommentDto(commentRepository.save(comment));
     }
 
-    @Override
-    public CommentDto getCommentByIdAdmin(Long commentId) {
-        Comment comment = getById(commentId);
-        log.info("Получение комментария администратором по идентификатору.");
-        return mapToCommentDto(comment);
-    }
-
     @Transactional
     @Override
     public void deleteCommentByIdAdmin(Long commentId) {
         getById(commentId);
         commentRepository.deleteById(commentId);
         log.info("Удаление комментария администратором.");
-    }
-
-    @Override
-    public List<CommentDto> getCommentsAdmin(CommentRequestDto requestDto) {
-        log.info("Получение комментариев по выбранному условию.");
-        Pageable pagination = patternPageable(requestDto.getFrom(), requestDto.getSize());
-        return commentRepository.findAllByAuthorIdOrEventId(requestDto.getUserId(), requestDto.getEventId(), pagination)
-                .stream()
-                .map(CommentMapper::mapToCommentDto)
-                .collect(Collectors.toList());
     }
 }

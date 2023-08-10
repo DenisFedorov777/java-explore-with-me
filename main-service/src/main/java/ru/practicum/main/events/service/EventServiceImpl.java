@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.StatsClient;
 import ru.practicum.main.categories.model.Category;
 import ru.practicum.main.categories.repository.CategoryRepository;
+import ru.practicum.main.comments.repository.CommentRepository;
 import ru.practicum.main.events.model.Event;
 import ru.practicum.main.events.model.dto.*;
 import ru.practicum.main.events.repository.EventRepository;
@@ -48,6 +49,7 @@ public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     private final StatsClient statsClient;
     private final UpdaterDtoToEntity update;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<EventFullDto> getEvents(EventRequestDto requestDto) {
@@ -118,6 +120,7 @@ public class EventServiceImpl implements EventService {
         validateExistsUser(userId);
         validateExistsEvent(eventId);
         Event event = repository.findByIdAndInitiator_Id(eventId, userId);
+        event.setComments(commentRepository.countByEventId(eventId));
         updateViews(List.of(event));
         return EventMapper.toFullDto(event);
     }
@@ -216,6 +219,7 @@ public class EventServiceImpl implements EventService {
         Event event = repository.findByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new EventNotFoundException("Event with id was not found"));
         updateViews(List.of(event));
+        event.setComments(commentRepository.countByEventId(eventId));
         return EventMapper.toFullDto(event);
     }
 

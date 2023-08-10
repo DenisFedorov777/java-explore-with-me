@@ -29,4 +29,5 @@ public class EventFullDto {
     Boolean requestModeration;
     State state;
     Long views;
+    Long comments;
 }

@@ -28,7 +28,7 @@ public class PrivateCommentController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public CommentDto createdComment(@PathVariable(value = "userId") Long userId,
                                      @RequestParam(value = "eventId") Long eventId,
-                                     @Valid @RequestBody CommentDto commentDto) {
+                                     @Validated @RequestBody CommentDto commentDto) {
         log.info("Creating comment {} by user Id {} and event Id {}", commentDto, userId, eventId);
         return commentService.saveComment(userId, eventId, commentDto);
     }
@@ -50,7 +50,7 @@ public class PrivateCommentController {
     }
 
     @GetMapping("/comments")
-    public Collection<CommentDto> getCommentByUser(@PathVariable(value = "userId") Long userId,
+    public Collection<CommentDto> getUserComments(@PathVariable(value = "userId") Long userId,
                                                    @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                                    @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("Get comments by user Id {}", userId);
@@ -67,8 +67,10 @@ public class PrivateCommentController {
 
     @GetMapping("/events/{eventId}/comments")
     public Collection<CommentDto> getCommentsByEventId(@PathVariable(value = "userId") Long userId,
-                                                       @PathVariable(value = "eventId") Long eventId) {
+                                                       @PathVariable(value = "eventId") Long eventId,
+                                                       @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                                       @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("Get comments by user Id {} and event id {}", userId, eventId);
-        return commentService.getCommentsByEventId(userId, eventId);
+        return commentService.getCommentsByEventId(userId, eventId, from, size);
     }
 }
