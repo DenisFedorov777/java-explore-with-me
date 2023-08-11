@@ -19,13 +19,14 @@ public class CommentMapper {
     }
 
     public static CommentDto mapToCommentDto(Comment comment) {
-        return new CommentDto(
-                comment.getId(),
-                comment.getText(),
-                comment.getAuthor().getId(),
-                comment.getEvent().getId(),
-                comment.getCreated()
-                //comment.isUpdated()
-        );
+        CommentDto dto = new CommentDto();
+        dto.setId(comment.getId());
+        dto.setText(comment.getText());
+        dto.setAuthorId(comment.getAuthor().getId());
+        dto.setEventId(comment.getEvent().getId());
+        dto.setCreated(comment.getCreated());
+        dto.setUpdateTime(comment.getUpdateTime());
+        dto.setUpdated(comment.isUpdated());
+        return dto;
     }
 }
