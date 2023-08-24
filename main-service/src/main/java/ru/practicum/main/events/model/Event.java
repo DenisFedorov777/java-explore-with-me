@@ -55,4 +55,6 @@ public class Event {
     State state;
     @Transient
     Long views;
+    @Transient
+    Long comments;
 }

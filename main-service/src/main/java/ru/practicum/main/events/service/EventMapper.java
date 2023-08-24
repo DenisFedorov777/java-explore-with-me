@@ -40,6 +40,7 @@ public class EventMapper {
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(event.getViews())
+                .comments(event.getComments())
                 .build();
     }
 
@@ -65,6 +66,7 @@ public class EventMapper {
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .views(event.getViews())
+                .comments(event.getComments())
                 .build();
     }
 
