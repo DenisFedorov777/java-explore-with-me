@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.main.users.model.User;
 
 import java.util.List;
-
+/**Репозиторий класса Users
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByIdIn(List<Long> ids, Pageable pageable);
 }
