@@ -4,7 +4,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-
+/** класс сущность User
+ */
 @Entity
 @Table(name = "users")
 @Getter
